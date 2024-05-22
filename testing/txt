@@ -1,0 +1,137 @@
+Yes, you will need to create the project structure manually. Here's a detailed guide on how to do it using VS Code:
+
+### Step-by-Step Guide to Manually Create the Project Structure
+
+#### 1. Open VS Code and Create a New Project Directory
+
+1. Open VS Code.
+2. Open the integrated terminal (View > Terminal).
+3. Navigate to the directory where you want to create your project.
+
+```sh
+cd path/to/your/directory
+```
+
+4. Create a new directory for your project and navigate into it:
+
+```sh
+mkdir my_project
+cd my_project
+```
+
+#### 2. Create the Project Structure
+
+1. Create the `features` directory and its subdirectories:
+
+```sh
+mkdir -p features/steps
+```
+
+2. Create the `example.feature` file:
+
+```sh
+code features/example.feature
+```
+
+Add the following content to `example.feature`:
+
+```gherkin
+Feature: Example feature
+  Scenario: Example scenario
+    Given I open the browser
+    When I go to the Google homepage
+    Then the title should be "Google"
+```
+
+3. Create the `steps.py` file:
+
+```sh
+code features/steps/steps.py
+```
+
+Add the following content to `steps.py`:
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('I open the browser')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+
+@when('I go to the Google homepage')
+def step_impl(context):
+    context.browser.get('https://www.google.com')
+
+@then('the title should be "Google"')
+def step_impl(context):
+    assert context.browser.title == "Google"
+    context.browser.quit()
+```
+
+4. Create the `environment.py` file:
+
+```sh
+code features/environment.py
+```
+
+Add the following content to `environment.py` (optional):
+
+```python
+from selenium import webdriver
+
+def before_all(context):
+    context.browser = webdriver.Chrome()
+
+def after_all(context):
+    if hasattr(context, 'browser'):
+        context.browser.quit()
+
+```
+
+5. Create the `behave.ini` file (optional):
+
+```sh
+code behave.ini
+```
+
+Add the following content to `behave.ini`:
+
+```ini
+[behave]
+default_tags = ~@wip
+```
+
+#### 3. Install Required Packages
+
+Make sure you have `behave` and `selenium` installed. If not, install them using pip:
+
+```sh
+pip install behave selenium
+```
+
+#### 4. WebDriver Setup
+
+Download the appropriate WebDriver for your browser (e.g., `chromedriver` for Chrome) and place it in a directory included in your system's PATH. Alternatively, specify its path directly in your script:
+
+```python
+context.browser = webdriver.Chrome(executable_path='/path/to/chromedriver')
+```
+
+#### 5. Run Your Tests
+
+To run your tests, navigate to your project directory in the terminal and execute:
+
+```sh
+behave
+```
+
+This command will look for feature files in the `features` directory and run the tests according to the step definitions provided.
+
+### Additional Tips
+
+- **Python Interpreter**: Ensure that VS Code is using the correct Python interpreter. You can select the interpreter by pressing `Ctrl+Shift+P` and typing "Python: Select Interpreter".
+- **Linting and Formatting**: Install and configure Python linting and formatting extensions in VS Code to improve code quality and readability.
+- **Integrated Terminal**: Use the integrated terminal in VS Code for running commands and viewing outputs.
+
+By following these steps, you'll manually set up the project structure required for `behave` and Selenium in Python, and be able to run your BDD tests using VS Code.
